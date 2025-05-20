@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from postgrest import APIError
 from app.supabase_client import supabase
+from app.template.linkout import LinkOut
 
 app = FastAPI()
 
@@ -36,3 +37,21 @@ async def get_chapters():
     except APIError as e:
         # 捕获 Supabase/Postgrest 的错误并转成 HTTP 500
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/chapters/{chapter_code}/links", response_model=list[LinkOut])
+async def get_links(chapter_code: str):
+    """
+    根据 chapter_code 查询所有 link 记录。
+    例如：chapter_code = "03050"
+    """
+    try:
+        resp = (
+            supabase
+            .table("link")
+            .select("row, digit, code, name, child_row, child_digit, child_code, child_name")
+            .eq("chapter", chapter_code)
+            .execute()
+        )
+        return resp.data
+    except APIError as e:
+        raise HTTPException(status_code=500, detail=f"Supabase 查询失败: {e}")
