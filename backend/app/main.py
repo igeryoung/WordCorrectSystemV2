@@ -1,6 +1,5 @@
 # app/main.py
-
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from postgrest import APIError
@@ -48,10 +47,44 @@ async def get_links(chapter_code: str):
         resp = (
             supabase
             .table("link")
-            .select("row, digit, code, name, child_row, child_digit, child_code, child_name")
+            .select("group, digit, code, name, child_group, child_digit, child_code, child_name")
             .eq("chapter", chapter_code)
             .execute()
         )
+        return resp.data
+    except APIError as e:
+        raise HTTPException(status_code=500, detail=f"Supabase 查询失败: {e}")
+
+
+@app.get("/chapters/{chapter_code}/links", response_model=list[LinkOut])
+async def get_links(
+    chapter_code: str,
+    parent_code: str | None = Query(
+        None,
+        description="If provided, filters links by code==parent_code; otherwise code==chapter_code"
+    )
+):
+    """
+    Fetch all link records under the given chapter, or under a specific parent code.
+    - If parent_code is None: returns links where code == chapter_code
+    - If parent_code is provided: returns links where code == parent_code
+    """
+    try:
+        builder = (
+            supabase
+            .table("link")
+            .select("group, digit, code, name, child_group, child_digit, child_code, child_name")
+        )
+        # always scope to the chapter table
+        builder = builder.eq("chapter", chapter_code)
+
+        # then filter by either chapter_code or parent_code
+        if parent_code:
+            builder = builder.eq("code", parent_code)
+        else:
+            builder = builder.eq("code", chapter_code)
+
+        resp = builder.execute()
         return resp.data
     except APIError as e:
         raise HTTPException(status_code=500, detail=f"Supabase 查询失败: {e}")
