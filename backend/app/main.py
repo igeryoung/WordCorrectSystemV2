@@ -5,8 +5,12 @@ from pydantic import BaseModel
 from postgrest import APIError
 from app.supabase_client import supabase
 from app.template.linkout import LinkOut
+from app.algo.recommand import CodeCorrector
+from app.template.CorrectionObject import CorrectionRequest, CorrectionResponse
+
 
 app = FastAPI()
+corrector = CodeCorrector()
 
 # CORS
 app.add_middleware(
@@ -88,3 +92,25 @@ async def get_links(
         return resp.data
     except APIError as e:
         raise HTTPException(status_code=500, detail=f"Supabase 查询失败: {e}")
+
+@app.post(
+    "/correct",
+    response_model=CorrectionResponse,
+)
+async def correct(req: CorrectionRequest):
+    try:
+        print(req.raw_code)
+        print(req.raw_text)
+        # unpack your corrector output
+        codes, names, error = corrector.correct(req.raw_code, req.raw_text)
+        # ensure error is a string or None
+        err_str: Optional[str] = str(error) if error else None
+
+        return CorrectionResponse(
+            codes=codes,
+            names=names,
+            error=err_str,
+        )
+    except Exception as e:
+        # this becomes a 500 with your message
+        raise HTTPException(status_code=500, detail=str(e))
