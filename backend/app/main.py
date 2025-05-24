@@ -7,7 +7,7 @@ from app.supabase_client import supabase
 from app.template.linkout import LinkOut
 from app.algo.recommand import CodeCorrector
 from app.template.CorrectionObject import CorrectionRequest, CorrectionResponse
-
+from app.template.unitout import UnitOut
 
 app = FastAPI()
 corrector = CodeCorrector()
@@ -99,8 +99,6 @@ async def get_links(
 )
 async def correct(req: CorrectionRequest):
     try:
-        print(req.raw_code)
-        print(req.raw_text)
         # unpack your corrector output
         codes, names, error = corrector.correct(req.raw_code, req.raw_text)
         # ensure error is a string or None
@@ -114,3 +112,18 @@ async def correct(req: CorrectionRequest):
     except Exception as e:
         # this becomes a 500 with your message
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/unit/{chapter_code}", response_model=list[UnitOut])
+async def get_units(chapter_code: str):
+    try:
+        resp = (
+            supabase
+            .table("unit")
+            .select("name, code")
+            .eq("chapter", chapter_code)
+            .execute()
+        )
+        print(resp.data)
+        return resp.data
+    except APIError as e:
+        raise HTTPException(status_code=500, detail=f"Supabase 查询失败: {e}")
