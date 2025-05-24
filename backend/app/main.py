@@ -123,7 +123,6 @@ async def get_units(chapter_code: str):
             .eq("chapter", chapter_code)
             .execute()
         )
-        print(resp.data)
         return resp.data
     except APIError as e:
         raise HTTPException(status_code=500, detail=f"Supabase 查询失败: {e}")
