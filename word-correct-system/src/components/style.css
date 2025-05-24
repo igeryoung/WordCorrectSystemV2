@@ -1,0 +1,30 @@
+body { font-family: Arial, sans-serif; padding: 15px; margin: 0; background-color: #f4f7f6; font-size: 14px; }
+#root { max-width: 1200px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+h1 { text-align: center; margin-bottom: 20px; color: #333; }
+h2 { color: #333; margin-top: 0; font-size: 1.1em; }
+label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.9em; color: #555; }
+input[type="text"], select, textarea { width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;}
+button { padding: 8px 12px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 14px; }
+button:disabled { background-color: #ccc; }
+.button-link { background: none; border: none; color: #007bff; padding: 0; font-size:0.9em; cursor:pointer; }
+
+.data-import-placeholder { padding: 15px; background-color:#e9ecef; border:1px dashed #ccc; text-align:center; margin-bottom:20px; border-radius:4px;}
+
+.control-filter-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; padding: 15px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; margin-bottom: 20px; gap: 15px; }
+.summary-section p { margin: 0; font-size: 0.95em; color: #333; padding-top: 5px; }
+.summary-section span { font-weight: bold; }
+.filter-section #filter-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.filter-group { display: flex; flex-direction: column; }
+.filter-group label { font-size: 0.9em; margin-bottom: 2px; }
+.filter-group select, .filter-group input[type="text"] { padding: 5px; font-size: 13px; }
+
+.pcces-batch-correction-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: auto; margin-top:20px; }
+.pcces-batch-correction-table th,
+.pcces-batch-correction-table td { border: 1px solid #ddd; padding: 10px; text-align: left; vertical-align: top; word-break: break-word; }
+.pcces-batch-correction-table th { background-color: #e9ecef; font-weight: bold; }
+.pcces-batch-correction-table select { width: 100%; padding: 6px; margin-bottom: 5px; box-sizing: border-box; font-size: 13px; }
+.correction-cell-content .form-group { margin-bottom: 8px; }
+.advanced-correction-options { margin-top: 10px; padding: 10px; border: 1px dashed #007bff; border-radius: 4px; background-color: #f0f8ff; }
+.final-code-display {font-weight:bold;}
+.stage3-suffix-digit-selector { display: inline-block; width: auto; min-width: 16%; margin-right: 1%; margin-bottom: 5px; }
+.stage3-suffix-digits label {margin-bottom: 5px;}
